@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import {FcGoogle} from "react-icons/fc";
 import {FaGithub} from "react-icons/fa";
-import {FaApple} from "react-icons/fa";
+import {FaFacebook} from "react-icons/fa";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -57,11 +57,34 @@ export const SignUpViews = () => {
       name:data.name,
       email:data.email,
       password:data.password,
+      callbackURL: "/",
     },
     {
       onSuccess:()=>{
         setPending(false);
         router.push("/");
+      },
+        onError:({ error })=>{
+        setError(error.message);
+        setPending(false);
+      }
+
+    }
+  );
+};
+ const onSocial= (provider: "google" | "github" | "facebook") =>{
+    setError(null);
+    setPending(true);
+
+    //API CALL (authClient) This is where frontend talks to backend
+    authClient.signIn.social({
+      provider: provider,
+      callbackURL: "/",
+    },
+    {
+      onSuccess:()=>{
+        setPending(false);
+
       },
         onError:({ error })=>{
         setError(error.message);
@@ -173,6 +196,7 @@ export const SignUpViews = () => {
                 className="w-full flex"
                 type="button"
                 disabled={pending}
+                onClick={()=> onSocial("google")}
                 > 
                 <FcGoogle className="" />
                 Google
@@ -181,16 +205,20 @@ export const SignUpViews = () => {
                 className="w-full flex"
                 type="button"
                 disabled={pending}
+                onClick={() => onSocial("github")}
                 > 
                 <FaGithub className="" />
                 Github
-                </Button><Button variant="outline"
+                </Button>
+                <Button
+                variant="outline"
                 className="w-full flex"
                 type="button"
                 disabled={pending}
+                onClick={() => onSocial("facebook")}
                 > 
-                <FaApple className="" />
-                Apple
+                <FaFacebook className="" />
+                Facebook
                 </Button>
                 </div>
                 <div className="text-sm text-center mt-5 -mb-2.5">
