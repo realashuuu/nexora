@@ -54,7 +54,7 @@ export const SignInViews = () => {
     {
       onSuccess:()=>{
         setPending(false);
-        router.push("/");
+        router.push("/");  
 
       },
         onError:({ error })=>{
