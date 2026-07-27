@@ -6,14 +6,18 @@ import { resolve } from "path";
 import { TRPCError } from "@trpc/server";
 import { agentsInsertSchema } from "../schemas";
 import { CarTaxiFront } from "lucide-react";
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import { Input } from "@/components/ui/input";
 
 export const agentsRouter = createTRPCRouter({
   //TODO: change getOne to use protectedprocedure
   getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
     const [existingAgent] = await db
-      .select()
+      .select({
+        ...getTableColumns(agents),
+        meetingCount: sql<number>`5`,
+
+      })
       .from(agents)
       .where(eq(agents.id, input.id));
     return existingAgent;
