@@ -76,7 +76,7 @@ export const verification = pgTable(
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
-export const agent = pgTable("agents", {
+export const agents = pgTable("agents", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => nanoid()),

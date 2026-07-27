@@ -5,12 +5,12 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ResponsiveDialogProps{
   title: string;
-  desciption: string;
+  description: string;
   children : React.ReactNode;
   open:boolean;
   onOpenChange : (open:boolean)=>void;
 }
-export const ResponsiveDialog =({title,desciption, children ,open,onOpenChange}:ResponsiveDialogProps)=>{
+export const ResponsiveDialog =({title,description, children ,open,onOpenChange}:ResponsiveDialogProps)=>{
   const isMobile = useIsMobile();
   if(isMobile){
     return (
@@ -18,7 +18,7 @@ export const ResponsiveDialog =({title,desciption, children ,open,onOpenChange}:
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
-            <DrawerDescription>{desciption}</DrawerDescription>
+            <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
           <div className="p-4">
             {children}
@@ -33,7 +33,7 @@ export const ResponsiveDialog =({title,desciption, children ,open,onOpenChange}:
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
-              <DialogDescription>{desciption}</DialogDescription>
+              <DialogDescription>{description}</DialogDescription>
             </DialogHeader>
             {children}
           </DialogContent>
