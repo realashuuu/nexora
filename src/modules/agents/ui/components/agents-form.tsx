@@ -36,7 +36,7 @@ export const AgentForm = ({onSuccess, onCancel, initialValues }:AgentFromProps)=
       onSettled:()=>{
         onSuccess: async()=>{
           await queryClient.invalidateQueries(
-            trpc.agents.getMany.queryOptions(),  //->which eventually inserts them into the database.
+            trpc.agents.getMany.queryOptions({}),  //->which eventually inserts them into the database.
           );
           if(initialValues?.id){
            await queryClient.invalidateQueries(

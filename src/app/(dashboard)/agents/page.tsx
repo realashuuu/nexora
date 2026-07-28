@@ -8,11 +8,15 @@ import { AgentsListHeader } from "@/modules/agents/ui/components/agents-list-hea
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { SearchParams } from "nuqs";
+import { loadSearchParams } from "@/modules/agents/params";
 
+interface Props {
+  searchParams: Promise<SearchParams>;
+}
+const Page = async ({ searchParams }: Props) => {
 
-
-const Page = async ()=> {
-
+  const filtersParams = await loadSearchParams(searchParams);
   const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -22,7 +26,9 @@ const Page = async ()=> {
  
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
+  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions({
+    ...filtersParams,
+  }));
   
   return (
     <>
@@ -31,7 +37,7 @@ const Page = async ()=> {
         <Suspense 
           fallback={<AgentsViewLoading/>}>
             <ErrorBoundary fallback={<AgentsViewError/>}>
-                < AgentsView />
+                <AgentsView />
             </ErrorBoundary>
         </Suspense>
       </HydrationBoundary>
