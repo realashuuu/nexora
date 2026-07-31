@@ -38,11 +38,7 @@ export const AgentForm = ({onSuccess, onCancel, initialValues }:AgentFromProps)=
           await queryClient.invalidateQueries(
             trpc.agents.getMany.queryOptions({}),  //->which eventually inserts them into the database.
           );
-          if(initialValues?.id){
-           await queryClient.invalidateQueries(
-              trpc.agents.getOne.queryOptions({id: initialValues .id}),
-            );
-          }
+          //todo => invalidate free tier usage 
         }
         onSuccess?.();
       },
@@ -51,7 +47,25 @@ export const AgentForm = ({onSuccess, onCancel, initialValues }:AgentFromProps)=
       },
     }),
   );
+  const UpdateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
 
+        onSuccess: async()=>{
+          await queryClient.invalidateQueries(
+            trpc.agents.getMany.queryOptions({}),  //->which eventually inserts them into the database.
+          );
+          if(initialValues?.id){
+           await queryClient.invalidateQueries(
+              trpc.agents.getOne.queryOptions({id: initialValues .id}),
+            );
+          }
+          onSuccess?.();
+        },
+      onError:(error)=>{
+        toast.error(error.message)
+      },
+    }),
+  );
   //useForm->I have a form with multiple inputs. I need something to manage them.
   const form =useForm<z.infer<typeof agentsInsertSchema>>({
     resolver: zodResolver(agentsInsertSchema),
@@ -61,11 +75,11 @@ export const AgentForm = ({onSuccess, onCancel, initialValues }:AgentFromProps)=
     }
   })
   const isEdit = !!initialValues?.id;  //give false/true value
-  const isPending = createAgent.isPending ;
+  const isPending = createAgent.isPending || UpdateAgent.isPending;
   const onSubmit =(values : z.infer<typeof agentsInsertSchema>)=>{
     if(isEdit){
       //Upadte
-      console.log("TODO:updateAgent")
+      UpdateAgent.mutate({ ...values, id: initialValues.id });
     }else{
       //create
       createAgent.mutate(values);

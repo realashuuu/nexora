@@ -50,7 +50,7 @@ export const AgentIdViewHeader = ({agentId, agentName, onEdit, onRemove}: Props)
             <MoreVerticalIcon/>
           </Button>
         </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="-translate-x-3">
               <DropdownMenuItem onClick={onEdit}>
                 <PencilIcon className="size-4 text-black "/>
                 Edit

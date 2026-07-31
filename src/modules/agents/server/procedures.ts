@@ -2,17 +2,59 @@ import z from "zod";
 import { createTRPCRouter, baseProcedure, protectedProcedure } from "@/trpc/init";
 import { db } from "@/db";
 import { agents } from "@/db/schema";
-import { resolve } from "path";
+
 import { TRPCError } from "@trpc/server";
-import { agentsInsertSchema } from "../schemas";
-import { CarTaxiFront } from "lucide-react";
+import { agentsInsertSchema, agentsUpdateSchema } from "../schemas";
+
 import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
-import { Input } from "@/components/ui/input";
+
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
-import { InputOTPSeparator } from "@/components/ui/input-otp";
+
 
 export const agentsRouter = createTRPCRouter({
-  //TODO: change getOne to use protectedprocedure
+  update: protectedProcedure
+    .input(agentsUpdateSchema)
+    .mutation(async ({ input,ctx }) =>{
+      const [ updatedAgent ] = await db
+        .update(agents)
+        .set(input)
+        .where(
+          and(
+            eq( agents.id, input.id),
+            eq( agents.userId, ctx.auth.user.id),
+          ),
+        )
+        .returning();
+        if(!updatedAgent){
+          throw new TRPCError({
+          code:"NOT_FOUND",
+          message:"Agent not found",
+        })
+        }
+        return updatedAgent;
+      }
+    ),
+  remove: protectedProcedure
+  .input(z.object({ id: z.string( )}))
+  .mutation(async ({ input,ctx }) =>{
+    const [ removedAgent ] = await db
+      .delete(agents)
+      .where(
+        and(
+          eq( agents.id, input.id),
+          eq( agents.userId, ctx.auth.user.id),
+        ),
+      )
+      .returning();
+      if(!removedAgent){
+        throw new TRPCError({
+          code:"NOT_FOUND",
+          message:"Agent not found",
+        })
+      }
+      return removedAgent;
+      }
+    ),
   getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input,ctx }) => {
     const [existingAgent] = await db
       .select({
@@ -31,7 +73,7 @@ export const agentsRouter = createTRPCRouter({
       }
     return existingAgent;
   }),
-  //TODO: change getMany to use protectedprocedure
+
   getMany: protectedProcedure
     .input(
       z.object({
