@@ -13,14 +13,22 @@ import { InputOTPSeparator } from "@/components/ui/input-otp";
 
 export const agentsRouter = createTRPCRouter({
   //TODO: change getOne to use protectedprocedure
-  getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+  getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input,ctx }) => {
     const [existingAgent] = await db
       .select({
         ...getTableColumns(agents),
         meetingCount: sql<number>`4`,
       })
       .from(agents)
-      .where(eq(agents.id, input.id));
+      .where(
+        and(
+          eq(agents.id, input.id),
+          eq(agents.userId, ctx.auth.user.id),
+        )
+      );
+      if(!existingAgent){
+        throw new TRPCError({code:"NOT_FOUND", message:"Agents Not Found"});
+      }
     return existingAgent;
   }),
   //TODO: change getMany to use protectedprocedure
