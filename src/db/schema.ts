@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, index, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 
 export const user = pgTable("user", {
@@ -83,8 +83,44 @@ export const agents = pgTable("agents", {
   name: text("name").notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }), //cascade means when id is deleted agents also will be deleted as well
   instructions: text("instructions").notNull(),
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+export const meetingStatus = pgEnum("meeting_status",[
+  "upcoming",
+  "active",
+  "completed",
+  "processing",
+  "cancelled" 
+  ]
+)
+
+export const meetings = pgTable("meetings", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
+  name: text("name").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  agentId: text("agents")
+    .notNull()
+    .references(()=> agents.id, {onDelete: "cascade"}),
+  status: meetingStatus("status").notNull().default("upcoming"),
+  startedAt: timestamp("created_at"),
+  
+  endedAt: timestamp("created_at"),
+  transcriptURL: text("transcript_url"),  
+  recordingURL: text("recording_url"),  
+  summary: text("summary"),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
