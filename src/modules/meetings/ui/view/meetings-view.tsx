@@ -10,7 +10,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
   const { data } = useSuspenseQuery(trpc.meetings.getMany.queryOptions({}));
 
   return(
-    <div>
+    <div className="overflow-x-scroll gap-y-2">
         {JSON.stringify(data)}
     </div>
   );
