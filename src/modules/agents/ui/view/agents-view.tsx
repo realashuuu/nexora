@@ -6,7 +6,7 @@ import { useTRPC } from "@/trpc/client"
 import {  useSuspenseQuery } from "@tanstack/react-query"
 
 import { columns } from "../components/columns";
-import { DataTable } from "../components/data-table";
+import { DataTable } from "@/components/data-table";
 import { EmptyState } from "@/components/empty-state";
 import { useAgentsFilters } from "../../hooks/use-agents-filter";
 import { DataPagination } from "../components/data-pagination";

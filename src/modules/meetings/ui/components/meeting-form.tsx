@@ -144,7 +144,7 @@ export const MeetingForm = ({onSuccess, onCancel, initialValues }:MeetingFromPro
                     <div className="flex items-center gap-2">
                       <GenerateAvatar
                         seed={agent.name}
-                        variant="botttsNeutral"
+                        varient="botttsNeutral"
                         className="border size-6"
                       />
                       <span>{agent.name}</span>
