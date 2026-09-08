@@ -1,11 +1,11 @@
 "use client"
-import { format } from "date-fns";
+
 import {humanizeDuration} from "humanize-duration";
 import { ColumnDef } from "@tanstack/react-table"
 import { MeetingGetMany } from "../../types"
 import { GenerateAvatar } from "@/components/generate-avatar"
 import { Badge } from "@/components/ui/badge"
-import { CornerDownRightIcon, VideoIcon, CircleXIcon, CircleCheckIcon, ClockArrowUpIcon, ClockFading, LoaderIcon, ClockFadingIcon } from "lucide-react"
+import { CornerDownRightIcon, CircleXIcon, CircleCheckIcon, ClockArrowUpIcon, LoaderIcon, ClockFadingIcon } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 // This type is used to define the shape of our data.

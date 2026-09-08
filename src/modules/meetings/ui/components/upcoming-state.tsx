@@ -17,7 +17,7 @@ export const UpcomingState = ({ meetingId, onCancelMeeting, isCancelling }: Prop
         title="No started yet"
         description="Once you start the meeting, a summary of the meeting will be generated and you can view it here. You can also view your past meetings and their summaries in the completed section."
         />
-        <div className="flex flex-col-reverse lg:flex-row lg:justify-center items-center gap-2-w-full">
+        <div className="flex flex-col-reverse lg:flex-row lg:justify-center items-center gap-2 w-full">
           <Button 
            variant="secondary"
            className="w-full lg:w-auto  "
@@ -27,7 +27,7 @@ export const UpcomingState = ({ meetingId, onCancelMeeting, isCancelling }: Prop
             <BanIcon/>
             Cancel Meeting
           </Button>
-          <Button asChild  disabled={isCancelling} className="w-full lg:w-auto">
+          <Button asChild  disabled={isCancelling} className="w-full bg-green-600 text-white hover:bg-green-700 hover:text-white lg:w-auto">
           <Link href={`/call/${meetingId}`}>
             <VideoIcon/>
             Start Meeting
